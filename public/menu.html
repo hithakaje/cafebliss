@@ -3,8 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Café Bliss - Menu</title>
+    <title>Café Bliss - Menu & Order</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .order-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .order-section form {
+            max-width: 400px;
+            margin: auto;
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .order-section label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        .order-section input, .order-section button {
+            width: 100%;
+            padding: 6px;
+            margin-top: 5px;
+        }
+        .recent-orders {
+            margin-top: 40px;
+        }
+        .recent-orders ul {
+            list-style: none;
+            padding: 0;
+        }
+        .recent-orders li {
+            background: #f8f8f8;
+            margin: 5px auto;
+            padding: 8px;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -19,47 +56,115 @@
     <section>
         <h2>☕ Coffee & Espresso Drinks</h2>
         <div class="item-grid">
-            <div><img src="images/brew.jpeg" alt="Cold Brew"><p>Cold Brew</p></div>
-            <div><img src="images/ex.jpeg" alt="Espresso"><p>Espresso</p></div>
-            <div><img src="images/icedd.jpeg" alt="Iced Latte"><p>Iced Latte</p></div>
-            <div><img src="images/cap.jpeg" alt="Cappuccino"><p>Cappuccino</p></div>
-            <div><img src="images/hot.jpeg" alt="Hot Chocolate"><p>Hot Chocolate</p></div>
-            <div><img src="images/chai.jpeg" alt="Chai"><p>Chai</p></div>
+            <div onclick="addToOrder('Cold Brew')"><img src="images/brew.jpeg" alt="Cold Brew"><p>Cold Brew - ₹120</p></div>
+            <div onclick="addToOrder('Espresso')"><img src="images/ex.jpeg" alt="Espresso"><p>Espresso - ₹80</p></div>
+            <div onclick="addToOrder('Iced Latte')"><img src="images/icedd.jpeg" alt="Iced Latte"><p>Iced Latte - ₹150</p></div>
+            <div onclick="addToOrder('Cappuccino')"><img src="images/cap.jpeg" alt="Cappuccino"><p>Cappuccino - ₹140</p></div>
+            <div onclick="addToOrder('Hot Chocolate')"><img src="images/hot.jpeg" alt="Hot Chocolate"><p>Hot Chocolate - ₹130</p></div>
+            <div onclick="addToOrder('Chai')"><img src="images/chai.jpeg" alt="Chai"><p>Chai - ₹90</p></div>
         </div>
+    </section>
 
-        <h2>🍵 Non-Coffee Drinks</h2>
-        <div class="item-grid">
-            <div><img src="images/avc.jpeg" alt="Avocado milkahake"><p>Avocado Milkshake</p></div>
-            <div><img src="images/man.jpeg" alt="Mango Milkshake"><p>Mango Milshake</p></div>
-            <div><img src="images/wat.jpeg" alt="Watermelon Milkshake"><p>Watermelon Milshake</p></div>
-            <div><img src="images/smoo.jpeg" alt="Smoothie"><p>Smoothie</p></div>
-            <div><img src="images/dfj.jpeg" alt="Dragon fruit Milkshake"><p>Dragon fruit Milkshake</p></div>
-            <div><img src="images/moo.jpeg" alt="Dragon fruit Milkshake"><p>Fresh Juice</p></div>
+    <!-- Order Form Section -->
+    <section class="order-section">
+        <h2>📝 Place Your Order</h2>
+        <form id="orderForm">
+            <label>Name:</label>
+            <input type="text" id="name" required>
 
-        </div>
+            <label>Email:</label>
+            <input type="email" id="email" required>
 
-        <h2>🥐 Baked Goods</h2>
-        <div class="item-grid">
-            <div><img src="images/cross.jpeg" alt="Croissant"><p>Croissant</p></div>
-            <div><img src="images/muffin.jpeg" alt="Muffin"><p>Muffin</p></div>
-            <div><img src="images/roll.jpeg" alt="Cinnomon roll"><p>Cinnamon roll</p></div>
-            <div><img src="images/cook.jpeg" alt="Cookies"><p>Chocolate Cookies</p></div>
-            <div><img src="images/brr.jpeg" alt="Brownie"><p>Brownie</p></div>
-            <div><img src="images/tart.jpeg" alt="Lemon tart"><p>Lemon tart</p></div>
-        </div>
-        <h2>🥐 Desserts</h2>
-        <div class="item-grid">
-            <div><img src="images/cc.jpeg" alt="Cheesecake"><p>Cheese cake</p></div>
-            <div><img src="images/tira.jpeg" alt="Tiramisu"><p>Tiramisu</p></div>
-            <div><img src="images/lava.jpeg" alt="Cinnomon roll"><p>Choco Lava Pastry</p></div>
-            <div><img src="images/red.jpeg" alt="Cookies"><p>Red Velvet Pastry</p></div>
-            <div><img src="images/mou.jpeg" alt="Mousse"><p>Chocolate Mousse</p></div>
-            <div><img src="images/pud.jpeg" alt="Caramel  pudding"><p>Caramel Pudding</p></div>
-        </div>
+            <label>Items Selected:</label>
+            <input type="text" id="selectedItems" readonly>
+
+            <label>Total Price (₹):</label>
+            <input type="number" id="totalPrice" readonly>
+
+            <button type="submit">Submit Order</button>
+        </form>
+    </section>
+
+    <!-- Recent Orders Section -->
+    <section class="recent-orders">
+        <h2>📦 Recent Orders</h2>
+        <ul id="ordersList"></ul>
     </section>
 
     <footer>
         <p>© 2025 Café Bliss</p>
     </footer>
+
+    <script>
+        const itemPrices = {
+            "Cold Brew": 120,
+            "Espresso": 80,
+            "Iced Latte": 150,
+            "Cappuccino": 140,
+            "Hot Chocolate": 130,
+            "Chai": 90
+        };
+
+        let orderItems = [];
+        let totalPrice = 0;
+
+        function addToOrder(item) {
+            orderItems.push(item);
+            totalPrice += itemPrices[item];
+            document.getElementById('selectedItems').value = orderItems.join(', ');
+            document.getElementById('totalPrice').value = totalPrice;
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const orderData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                items: orderItems,
+                totalPrice: totalPrice
+            };
+
+            try {
+                const response = await fetch('/order', { // fixed URL
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!response.ok) throw new Error('Server error');
+
+                alert('✅ Order placed successfully!');
+                orderItems = [];
+                totalPrice = 0;
+                document.getElementById('selectedItems').value = '';
+                document.getElementById('totalPrice').value = '';
+                document.getElementById('orderForm').reset();
+                fetchOrders();
+            } catch (err) {
+                alert('❌ ' + err.message);
+            }
+        });
+
+        async function fetchOrders() {
+            try {
+                const res = await fetch('/orders'); // fixed URL
+                if (!res.ok) throw new Error('Failed to fetch orders');
+
+                const orders = await res.json();
+                const list = document.getElementById('ordersList');
+                list.innerHTML = '';
+                orders.forEach(o => {
+                    const li = document.createElement('li');
+                    li.textContent = `${o.name} - ${o.items.join(', ')} - ₹${o.totalPrice}`;
+                    list.appendChild(li);
+                });
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+            }
+        }
+
+        fetchOrders();
+    </script>
 </body>
 </html>
